@@ -1,44 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import { useState } from 'react';
+import Sidebar from './components/Sidebar';
+import DatabaseInstall from './components/DatabaseInstall';
+import PM2Services from './components/PM2Services';
+import LogViewer from './components/LogViewer';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activeSection, setActiveSection] = useState('db-install');
 
-  return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden">
-        <div className="p-8">
-          <div className="flex justify-center space-x-4 mb-8">
-            <a href="https://react.dev" target="_blank" rel="noopener noreferrer">
-              <img src={reactLogo} className="h-16 w-16 hover:opacity-80 transition-opacity animate-spin" alt="React logo" />
-            </a>
-          </div>
-          
-          <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
-            Menu Rápido
-          </h1>
-          
-          <div className="text-center">
-            <button 
-              onClick={() => setCount((count) => count + 1)}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
-            >
-              Contador: {count}
-            </button>
-            
-            <p className="mt-4 text-gray-600">
-              Edita <code className="bg-gray-200 px-2 py-1 rounded text-sm">src/App.tsx</code> y guarda para probar HMR
+  const handleExecuteScript = (scriptType: string) => {
+    console.log(`Ejecutando script: ${scriptType}`);
+    // Aquí se implementará la lógica de Electron para ejecutar scripts
+  };
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'db-install':
+      case 'db-uninstall':
+      case 'db-clean':
+        return <DatabaseInstall onExecuteScript={handleExecuteScript} />;
+      
+      case 'pm2-install':
+      case 'pm2-status':
+        return <PM2Services onExecuteScript={handleExecuteScript} />;
+      
+      case 'logs-services':
+      case 'logs-database':
+      case 'logs-errors':
+        return <LogViewer onExecuteScript={handleExecuteScript} />;
+      
+      default:
+        return (
+          <div className="p-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Bienvenido a Menu Rápido</h2>
+            <p className="text-gray-600">
+              Selecciona una opción del menú lateral para comenzar a gestionar tu aplicación.
             </p>
           </div>
-          
-          <p className="text-center text-sm text-gray-500 mt-6">
-            Aplicación React + Electron con TypeScript y TailwindCSS
-          </p>
-        </div>
+        );
+    }
+  };
+
+  return (
+    <div className="flex h-screen bg-gray-100">
+      <Sidebar 
+        activeSection={activeSection} 
+        onSectionChange={setActiveSection} 
+      />
+      
+      <div className="flex-1 overflow-y-auto">
+        {renderContent()}
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
 
