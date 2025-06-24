@@ -17,6 +17,7 @@
     "preelectron-pack": "npm run build && npm run build-electron"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.10",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
